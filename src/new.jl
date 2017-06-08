@@ -1,4 +1,5 @@
 # IMAGES
+using Images
 export nanfilt!, nanfilt, nanmaximum, nanminimum
 
 function nanfilt!(v::Vector,σ)
