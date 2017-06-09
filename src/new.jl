@@ -1,6 +1,8 @@
+export nanfilt!, nanfilt, nanmaximum, nanminimum
+export twodresample
+
 # IMAGES
 using Images
-export nanfilt!, nanfilt, nanmaximum, nanminimum
 
 function nanfilt!(v::Vector,σ)
     nans = .!(isnan.(v))
@@ -14,6 +16,16 @@ function nanfilt(v::Vector,σ)
     return t
 end
 
+# DSP
+using DSP
+
+function twodresample(mat, rate, fs=1250)
+    out = zeros(floor(Int, size(mat,1)*rate), size(mat,2))
+    for i in 1:size(mat,2)
+        out[:,i] = resample(mat[:,i],rate)
+    end
+    floor(Int, fs*rate), out
+end
 
 # NaN MATH
 using NaNMath; const nm = NaNMath
