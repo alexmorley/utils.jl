@@ -16,6 +16,11 @@ function nanfilt(v::Vector,σ)
     return t
 end
 
+function imfilter_gaussian(img, sigma; kwargs...)
+    imfilter(img,
+        KernelFactors.IIRGaussian(sigma; kwargs...))
+end
+
 # DSP
 using DSP
 
