@@ -1,4 +1,4 @@
-export nanfilt!, nanfilt, nanmaximum, nanminimum
+export nanfilt!, nanfilt, nanmaximum, nanminimum, nan2zero!
 export twodresample
 
 # IMAGES
@@ -36,3 +36,6 @@ end
 using NaNMath; const nm = NaNMath
 nanmaximum(x) = nm.maximum(x)
 nanminimum(x) = nm.minimum(x)
+
+nan2zero!(arr) = arr[isnan(arr)] .= zero(eltype(arr))
+

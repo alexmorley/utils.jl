@@ -1,6 +1,5 @@
 ####### WARNING NONE OF THESE FUNCTIONS ARE TESTED & SOME ARE VERY OLD! ########
 
-nan2zero!(arr) = arr[isnan(arr)] = zero(eltype(arr))
 
 """
 	dict2workspace{S<:Any}(dict::Dict{S, Any})
