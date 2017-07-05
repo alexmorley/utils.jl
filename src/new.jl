@@ -37,5 +37,4 @@ using NaNMath; const nm = NaNMath
 nanmaximum(x) = nm.maximum(x)
 nanminimum(x) = nm.minimum(x)
 
-nan2zero!(arr) = arr[isnan(arr)] .= zero(eltype(arr))
-
+nan2zero!(arr) = arr[isnan.(arr)] .= zero(eltype(arr))
