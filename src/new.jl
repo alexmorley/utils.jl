@@ -1,3 +1,4 @@
+export allequal, offdiagind
 export findnmax, findnmin
 export zscore_base
 export nanfilt!, nanfilt, nanmaximum, nanminimum, nan2zero!
@@ -11,6 +12,7 @@ function nextpow2(bins::T) where T<:Range
     return bins[1]:eT(bins.step):newend
 end
 
+## Base - Arrays
 function slicedimview(A::AbstractArray, d::Integer, i)
     d >= 1 || throw(ArgumentError("dimension must be ≥ 1"))
     nd = ndims(A)
@@ -18,7 +20,20 @@ function slicedimview(A::AbstractArray, d::Integer, i)
     view(A,Base.setindex(indices(A), i, d)...)
 end
 
-## find
+@inline function allequal(x::AbstractArray)
+    isempty(x) && error("Equality Undefined for empty arrays")
+	length(x)  < 2 && return true
+    e1 = x[1]
+    i = 2
+    @inbounds for i=2:length(x)
+        x[i] == e1 || return false
+    end
+    return true
+end
+
+offdiagind(M, k::Int=0) = setdiff(linearindices(M),diagind(M,k))
+
+### find
 function _check_length(n::Int, lX::Int)
 	if n > lX
 		error("n > length(X)")
@@ -27,7 +42,6 @@ function _check_length(n::Int, lX::Int)
 	end
 	return false
 end
-
 
 """
 	findnmax(X::AbstractArray, n::Int)
