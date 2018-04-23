@@ -1,8 +1,13 @@
-export allequal, offdiagind
+export nextpow2, allequal, offdiagind, offdiag
 export findnmax, findnmin
 export zscore_base
 export nanfilt!, nanfilt, nanmaximum, nanminimum, nan2zero!
 export twodresample
+export rotatexy
+
+# Conversions
+mmtoin(x::Real) = x/25.399986284
+intomm(x::Real) = x*25.399986284
 
 # Base
 import Base.nextpow2
@@ -31,7 +36,36 @@ end
     return true
 end
 
-offdiagind(M, k::Int=0) = setdiff(linearindices(M),diagind(M,k))
+"""
+	offdiagind(M::AbstractArray, k::Int=0)
+Get indicies not on k-th diagonal of an array.
+"""
+offdiagind(M::AbstractArray, k::Int=0) = setdiff(linearindices(M),diagind(M,k))
+
+"""
+	offdiag(x::AbstractArray)
+Get all values in array not on the main diagonal.
+"""
+offdiag(x::AbstractArray) = Base.unsafe_getindex(x,utils.offdiagind(x))
+
+"""
+	function rotatexy(x::AbstractVector,y::AbstractVector,θ::Real)	
+Rotate a set of x and y co-ordinationes by θ degrees.
+"""		
+function rotatexy(x::AbstractVector,y::AbstractVector,θ::Real)
+     θ = deg2rad(θ)
+    rot = [cos(θ) -sin(θ);
+           sin(θ) cos(θ)]
+    x2,y2 = (rot*[x y]') |> x->(x[1,:],x[2,:])
+    return x2,y2
+end
+
+function rotatexy(xy::AbstractArray,θ::Real)
+    θ = deg2rad(θ)
+    rot = [cos(θ) -sin(θ);
+           sin(θ) cos(θ)]
+    return rot*xy
+end
 
 ### find
 function _check_length(n::Int, lX::Int)
@@ -48,7 +82,7 @@ end
 Finds `n`-largest elements in array `X`.
 """
 function findnmax(X::AbstractArray, n::Int)
-    _check_length(n, length(X)) && return X[:]
+    _check_length(n, length(X)) && return collect(linearindices(X))
 	x = copy(X)
     inds = zeros(Int64,n)
     min = typemin(eltype(X))
@@ -60,7 +94,7 @@ function findnmax(X::AbstractArray, n::Int)
 end
 
 function findnmin(X::AbstractArray, n::Int)
-    _check_length(n, length(X)) && return X[:]
+    _check_length(n, length(X)) && return collect(linearindices(X))
 	x = copy(X)
     inds = zeros(Int64,n)
     min = typemax(eltype(X))
