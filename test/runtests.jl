@@ -1,5 +1,6 @@
 using utils
 using Base.Test
 
-# write your own tests here
-@test 1 == 1 
+for testfile in ["sorting.jl"]
+    include(joinpath(@__DIR__,testfile))
+end

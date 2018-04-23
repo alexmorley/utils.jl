@@ -1,19 +1,6 @@
+export bubble_sort!, bubble_sort_perm
 
-n initpos(cells2use)
-    pos = zeros(Int, size(cells2use))
-    i = 1
-    for (ind,c) in enumerate(cells2use)
-        if c
-            pos[ind] = i
-            i+=1
-        else
-            pos[ind] = -1
-        end
-    end
-    return pos
-end
-
-function bubble_sort_pass!(v::AbstractVector, by::AbstractVector=v)
+function bubble_sort_pass!(v::AbstractVector)
     issorted = true
     for i in 1:(length(v)-1)
         if v[i] > v[i+1]
@@ -56,7 +43,7 @@ function bubble_sort_pass!(v::AbstractVector, fixed::AbstractVector)
     return issorted
 end
 
-function bubble_sort_perm_pass!(v::AbstractVector, fixed::AbstractVector, by::AbstractVector=v)
+function bubble_sort_perm_pass!(v::AbstractVector, fixed::AbstractVector, by::AbstractVector)
     length(fixed) == length(v) || error("v and fixed must be the same length")
     issorted = true
     for i in 1:(length(v)-1)
