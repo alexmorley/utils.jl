@@ -19,7 +19,8 @@ module utils
 
     include("statsbase.jl")
     export zscore_base, zscore_base!
-    
+    export _bootstrap, bootstrap_confint
+
     include("sorting.jl")
     export bubble_sort!, bubble_sort_perm 
     
