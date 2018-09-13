@@ -19,18 +19,6 @@ function key2workspace(k::Symbol,evalmodule)
     eval(evalmodule,:($k=$v))
 end
 
-import Base.DataFmt: readdlm_string, invalid_dlm
-"""
-	getmeminfo()
-Returns (in MB) A tuple of containing:
-	- Memory(total, used, buffer, available)
-	- Swap(total, used, free)
-"""
-function getmeminfo()
-    memstats = readdlm_string(readstring(`free -m`),invalid_dlm(Char), Int, '\n', true, Dict())
-    return Tuple{Array{Int,1},Array{Int,1}}((memstats[2,[2;3;6;7]], memstats[3,[2;3;4]]))
-end
-
 
 """
 Get sliding windows across an axis
