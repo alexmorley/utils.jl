@@ -42,7 +42,7 @@ offdiag(x::AbstractArray) = Base.unsafe_getindex(x,utils.offdiagind(x))
 Rotate a set of x and y co-ordinationes by θ degrees.
 """		
 function rotatexy(x::AbstractVector,y::AbstractVector,θ::Real)
-     θ = deg2rad(θ)
+    θ = deg2rad(θ)
     rot = [cos(θ) -sin(θ);
            sin(θ) cos(θ)]
     x2,y2 = (rot*[x y]') |> x->(x[1,:],x[2,:])

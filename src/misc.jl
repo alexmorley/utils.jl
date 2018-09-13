@@ -2,6 +2,10 @@
 mmtoin(x::Real) = x/25.399986284
 intomm(x::Real) = x*25.399986284
 
+# Rounding
+roundup(x,n)   = round(x,n) >= x ? round(x,n) : round(x+1/(10^n),n)
+rounddown(x,n) = round(x,n) <= x ? round(x,n) : round(x+1/(10^n),n)
+
 # DSP
 using DSP
 
