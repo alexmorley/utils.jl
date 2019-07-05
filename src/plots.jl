@@ -8,9 +8,9 @@ function sslice(a,b)
     pycall(pybuiltin("slice"), PyObject, a,b+1)
 end
 
-function significance(pval)
+function significance(pval; ns="ns")
 	if pval > 0.1
-        sigsymbol = "ns"
+        sigsymbol = ns
         elseif pval > 0.05
         sigsymbol = "#"
         elseif pval > 0.01

@@ -6,7 +6,7 @@ function mnfsrsync(source::String, destination, user="data")
     rrsync(mnfs2rsync(source, destination, user)...)
 end
 
-function mnfsrsync{T}(source::Array{T,1}, destination, user="data")
+function mnfsrsync(source::Array{T,1}, destination, user="data") where T
 	files = cat(2,mnfs2rsync.(source, [destination])...)
 	tname = tempname()
 	writedlm(tname,files[1,:])

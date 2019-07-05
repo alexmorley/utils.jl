@@ -5,7 +5,7 @@
 	dict2workspace{S<:Any}(dict::Dict{S, Any})
 Pop key,value pairs into the workspace.
 """
-function dict2workspace{S<:Any}(dict::Dict{S, Any}, evalmodule::Module=Main)
+function dict2workspace(dict::AbstractDict, evalmodule::Module=Main)
     for (k,v) in dict
         key2workspace(k,v, evalmodule)
     end
@@ -86,7 +86,7 @@ end
 ## towards the value starting from "around" points either side
 ## i.e. value is the index where the centre of the interpolation
 ## will take place
-function interpolatearoundvalue!{T<:Real}(vector::Array{T, 1}, value, around, width)
+function interpolatearoundvalue!(vector::Array{T, 1}, value, around, width) where T<:Real
 	for i in value-around:value
 		vector[i] = mean(vector[i-width:i])
 	end
@@ -95,7 +95,7 @@ function interpolatearoundvalue!{T<:Real}(vector::Array{T, 1}, value, around, wi
 	end
 end
 
-function interpolatearoundvalue!{T<:Real}(array::Array{T, 2}, value, around, width)
+function interpolatearoundvalue!(array::Array{T, 2}, value, around, width) where T<:Real
 	for ind in 1:size(array,2)
 		for i in value-around:value
 			array[i,ind] = mean(array[i-width:i,ind])

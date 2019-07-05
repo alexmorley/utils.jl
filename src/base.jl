@@ -1,18 +1,37 @@
 # Base
-import Base.nextpow2
-function nextpow2(bins::T) where T<:Range
+import Base.nextpow
+function nextpow2(bins::T) where T<:AbstractRange
     eT = eltype(bins)
-    newend = eT(bins.step)*(nextpow2(length(bins)))
+    newend = eT(bins.step)*(Base.nextpow(2,length(bins)))
+
     return bins[1]:eT(bins.step):newend
 end
+function nextpow(power::Int, bins::T) where T<:AbstractRange
+    eT = eltype(bins)
+    newend = eT(bins.step)*(Base.nextpow(power,length(bins)))
+    return bins[1]:eT(bins.step):newend
+end
+@deprecate nextpow2 nextpow
 
-## Base - Arrays
+## Base - Arrays & Iterators
 function slicedimview(A::AbstractArray, d::Integer, i)
     d >= 1 || throw(ArgumentError("dimension must be ≥ 1"))
     nd = ndims(A)
     d > nd && (i == 1 || throw_boundserror(A, (ntuple(k->Colon(),nd)..., ntuple(k->1,d-1-nd)..., i)))
-    view(A,Base.setindex(indices(A), i, d)...)
+    view(A,Base.setindex(axes(A), i, d)...)
 end
+
+unzip(a) = map(x->getfield.(a, x), fieldnames(eltype(a)))
+function flatten(X::Array{A,1}) where A <: Array{Z} where Z
+    V = Array{Z}(undef, sum(length.(X)))
+    st = 1
+    for x in X
+        lx = length(x)
+        V[st:st+lx-1] .= x
+        st += lx
+    end
+    return V
+end  
 
 @inline function allequal(x::AbstractArray)
     isempty(x) && error("Equality Undefined for empty arrays")
@@ -25,11 +44,12 @@ end
     return true
 end
 
+using LinearAlgebra
 """
 	offdiagind(M::AbstractArray, k::Int=0)
 Get indicies not on k-th diagonal of an array.
 """
-offdiagind(M::AbstractArray, k::Int=0) = setdiff(linearindices(M),diagind(M,k))
+offdiagind(M::AbstractArray, k::Int=0) = setdiff(LinearIndices(M),diagind(M,k))
 
 """
 	offdiag(x::AbstractArray)
@@ -71,7 +91,7 @@ end
 Finds `n`-largest elements in array `X`.
 """
 function findnmax(X::AbstractArray, n::Int)
-    _check_length(n, length(X)) && return collect(linearindices(X))
+    _check_length(n, length(X)) && return collect(LinearIndices(X))
 	x = copy(X)
     inds = zeros(Int64,n)
     min = typemin(eltype(X))
@@ -83,7 +103,7 @@ function findnmax(X::AbstractArray, n::Int)
 end
 
 function findnmin(X::AbstractArray, n::Int)
-    _check_length(n, length(X)) && return collect(linearindices(X))
+    _check_length(n, length(X)) && return collect(LinearIndices(X))
 	x = copy(X)
     inds = zeros(Int64,n)
     min = typemax(eltype(X))
